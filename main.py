@@ -3,6 +3,7 @@ import requests
 from time import sleep, time
 from subprocess import call, DEVNULL
 import logging
+import sys
 from systemd.journal import JournaldLogHandler
 
 logger = logging.getLogger(__name__)
@@ -51,12 +52,13 @@ def is_connected(ping_host):
 
 def main():
     username, password = None, None
-    ping_host = "1.1.1.1"
-    conf_file = "/home/srinskit/.nitkcaa.conf"
+    ping_host = None
+    conf_file = sys.argv[1]
     try:
         with open(conf_file, "r") as f:
             lines = [val.strip() for val in f.readlines()]
             username, password = lines[0], lines[1]
+            ping_host = lines[2]
     except:
         logger.error("Could not read config file")
 
