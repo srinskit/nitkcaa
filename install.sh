@@ -23,8 +23,11 @@ Description= NITK Client Auth Agent Service
 
 [Service] 
 Type= simple 
-ExecStart= $python_path $PWD/main.py $conf_path
+ExecStart= $python_path $PWD/main.py $conf_path service
 
 [Install]
 WantedBy=multi-user.target
 EOF
+
+echo -e "Add the following alias to your .rc file\n"
+echo alias nitkcaa=\"$python_path $PWD/main.py $conf_path oneoff\"

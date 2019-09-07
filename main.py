@@ -54,6 +54,7 @@ def main():
     username, password = None, None
     ping_host = None
     conf_file = sys.argv[1]
+    one_off = sys.argv[2] == "oneoff"
     try:
         with open(conf_file, "r") as f:
             lines = [val.strip() for val in f.readlines()]
@@ -61,6 +62,11 @@ def main():
             ping_host = lines[2]
     except:
         logger.error("Could not read config file")
+        return
+
+    if one_off:
+        print("Done" if login(username, password) else "Failed")
+        return
 
     long_sleep = 16
     short_sleep = 4
