@@ -6,6 +6,7 @@ ping_host="1.1.1.1"
 
 conf_path=$PWD"/nitkcaa.conf"
 service_path=$PWD"/nitkcaa.service"
+service_root="/etc/systemd/system""/nitkcaa.service"
 
 python_path=$(which python3)
 
@@ -28,6 +29,10 @@ ExecStart= $python_path $PWD/main.py $conf_path service
 [Install]
 WantedBy=multi-user.target
 EOF
+
+ln -s $service_path $service_root
+systemctl enable nitkcaa.service
+systemctl start nitkcaa.service
 
 echo -e "Add the following alias to your .rc file\n"
 echo alias nitkcaa=\"$python_path $PWD/main.py $conf_path oneoff\"
