@@ -19,6 +19,7 @@ Run uninstall script
 ```
 
 ## Notes
+* Do install python packages `requests` and `systemd` 
 * Do not delete the clone.
 * Use `./main.py <path-to-conf> oneoff` to make a one-off login
 * Use the optional 3rd param in `install.sh` to use a custom service unit path
