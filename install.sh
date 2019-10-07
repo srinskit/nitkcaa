@@ -11,11 +11,13 @@ else
     service_root="/etc/systemd/system"
 fi
 
-service_path=$service_root"/nitkcaa.service"
-conf_path=$PWD"/nitkcaa.conf"
-unit_path=$PWD"/nitkcaa.service"
+echo "Installing python package"
+pip3 install nitkcaa/ --user
+[ $? -ne 0 ] && { echo "Could not install nitkcaa."; exit 1; }
 
-python_path=$(which python3)
+service_path=$service_root"/nitkcaa.service"
+conf_path=$HOME"/.nitkcaa.conf"
+unit_path=$PWD"/nitkcaa.service"
 
 cat << EOF > $conf_path
 $username
@@ -32,19 +34,19 @@ Description= NITK Client Auth Agent Service
 
 [Service] 
 Type= simple 
-ExecStart= $python_path $PWD/main.py $conf_path service
+User=$USER
+ExecStart= $(which nitkcaa) $conf_path --service 
 
 [Install]
 WantedBy=multi-user.target
 EOF
 [ $? -ne 0 ] && { echo "Could not generate service unit file."; exit 1; }
 
-ln -s $unit_path $service_path
+sudo ln -nsf $unit_path $service_path
 [ $? -ne 0 ] && { echo "Could not generate link in service folder."; exit 1; }
-systemctl enable nitkcaa.service
+sudo systemctl enable nitkcaa.service
 [ $? -ne 0 ] && { echo "Could not enable service."; exit 1; }
-systemctl start nitkcaa.service
+sudo systemctl start nitkcaa.service
 [ $? -ne 0 ] && { echo "Could not start service."; exit 1; }
 
-echo -e "Add the following alias to your .rc file\n"
-echo alias nitkcaa=\"$python_path $PWD/main.py $conf_path oneoff\"
+echo "Done."
