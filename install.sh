@@ -4,6 +4,8 @@
 username=$1
 password=$2
 ping_host="1.1.1.1"
+long_sleep=16
+short_sleep=4
 
 if [ $3 ]; then
     service_root=$3
@@ -23,6 +25,8 @@ cat << EOF > $conf_path
 $username
 $password
 $ping_host
+$long_sleep
+$short_sleep
 EOF
 [ $? -ne 0 ] && { echo "Could not generate config file."; exit 1; }
 

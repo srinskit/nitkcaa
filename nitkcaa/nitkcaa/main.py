@@ -10,6 +10,7 @@ from pathlib import Path
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
+
 def login(username, password):
     logger.debug("Attempting login in")
     login_route = "https://nac.nitk.ac.in:8090/login.xml"
@@ -30,7 +31,7 @@ def login(username, password):
         "a": int(round(time() * 1000)),
     }
     try:
-        r = requests.post(login_route, data, headers=headers,timeout=4)
+        r = requests.post(login_route, data, headers=headers, timeout=4)
         return r.ok
     except:
         pass
@@ -71,11 +72,14 @@ def main():
 
     username, password = None, None
     ping_host = None
+    long_sleep, short_sleep = None, None
+
     try:
         with open(args.config_file, "r") as f:
             lines = [val.strip() for val in f.readlines()]
             username, password = lines[0], lines[1]
             ping_host = lines[2]
+            long_sleep, short_sleep = int(lines[3]), int(lines[4])
     except:
         logger.error("Could not read config file. Check file and format")
         return
@@ -87,8 +91,6 @@ def main():
             logger.error("Failed")
         return
 
-    long_sleep = 16
-    short_sleep = 4
     try:
         while True:
             logger.debug("Checking internet connectivity")
